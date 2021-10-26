@@ -98,7 +98,7 @@ class StarCaller:
         try:
             cyp2d6_df = pd.read_csv(parsed_args.cyp2d6, sep='\t', dtype={'cyp2d6': str})
             star_df = pd.merge(star_df, cyp2d6_df, on=['sampleID'], how='left')
-        except FileNotFoundError:
+        except (FileNotFoundError, ValueError):
             star_df['cyp2d6'] = '.'
         star_df['star_fixed'] = star_df.apply(lambda x: sc.star_adjust(x['star'], x['cyp2d6']), axis=1)
         star_df.to_csv(f'{parsed_args.prefix}.cyp2d6_star.tsv', sep='\t', index=False, columns=['sampleID', 'star', 'star_fixed'])
